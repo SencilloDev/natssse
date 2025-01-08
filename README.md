@@ -55,3 +55,19 @@ r.Handle("POST /kv/{bucket}/{key...}", kvHandler)
 r.Handle("GET /kv/{bucket}/{key...}", kvHandler)
 log.Fatal(http.ListenAndServe(":8080", r))
 ```
+
+## Subscribe
+
+Here is an example to subscribe:
+
+```
+curl -N https://your.server.com/subscribe/test/things -H "Authorization: some-token"
+
+```
+
+Subscribing to a subject will return the subject and a base64 encoded string of the data. Here is an example:
+
+```
+{"subject":"test.things","data":"ewogICJoZXkiOiAidGhlcmUiCn0="}
+
+```
