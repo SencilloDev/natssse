@@ -48,7 +48,19 @@ func newPubHandler(w http.ResponseWriter, r *http.Request, nc NatsContext) {
 		return
 	}
 
-	if err := nc.Conn.Publish(subject, body); err != nil {
+	headers := nats.Header{}
+	vals := r.URL.Query()
+	for k, v := range vals {
+		headers.Set(k, v[0])
+	}
+
+	msg := &nats.Msg{
+		Subject: subject,
+		Data:    body,
+		Header:  headers,
+	}
+
+	if err := nc.Conn.PublishMsg(msg); err != nil {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), 500)
 		return
 	}
