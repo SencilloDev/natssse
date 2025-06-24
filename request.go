@@ -55,6 +55,11 @@ func newReqHandler(w http.ResponseWriter, r *http.Request, nc NatsContext) {
 		Data:    body,
 	}
 
+	vals := r.URL.Query()
+	for k, v := range vals {
+		msg.Header.Set(k, v[0])
+	}
+
 	resp, err := nc.Conn.RequestMsg(msg, 3*time.Second)
 	if err != nil && err == nats.ErrNoResponders {
 		http.Error(w, http.StatusText(http.StatusNotFound), 404)
